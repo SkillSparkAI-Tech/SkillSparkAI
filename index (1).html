@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillSpark AI | Student, Creator & LocaLink Toolkit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%); }
+        .tab-active { border-bottom: 2px solid #818cf8; color: #818cf8; }
+        .animate-fade-in { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen text-gray-100 font-sans pb-10">
+    <div class="max-w-3xl mx-auto px-4 py-8">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-extrabold text-indigo-400 tracking-tight">SkillSpark AI</h1>
+            <p class="text-gray-400 mt-2 text-sm uppercase tracking-widest">The Pakistani Toolkit: Student • Creator • LocaLink</p>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <div class="flex justify-between sm:justify-center sm:space-x-8 mb-8 border-b border-gray-800 text-xs sm:text-base overflow-x-auto">
+            <button id="tab1" onclick="switchTab(1)" class="pb-2 px-2 sm:px-4 tab-active font-semibold transition whitespace-nowrap">Student Refiner</button>
+            <button id="tab2" onclick="switchTab(2)" class="pb-2 px-2 sm:px-4 text-gray-400 hover:text-indigo-300 font-semibold transition whitespace-nowrap">Shorts Gen</button>
+            <button id="tab3" onclick="switchTab(3)" class="pb-2 px-2 sm:px-4 text-gray-400 hover:text-indigo-300 font-semibold transition whitespace-nowrap font-bold text-indigo-400">LocaLink Mode 🇵🇰</button>
+        </div>
+
+        <!-- Tool 1: Student Refiner -->
+        <div id="content1" class="bg-gray-800/40 p-6 rounded-2xl shadow-xl border border-gray-700 backdrop-blur-md">
+            <label class="block text-xs font-bold mb-3 text-indigo-300 uppercase tracking-widest">Homework Question:</label>
+            <textarea id="studentInput" rows="4" class="w-full bg-gray-900/80 border border-gray-700 rounded-xl p-4 text-white focus:ring-2 focus:ring-indigo-500 outline-none placeholder-gray-600" placeholder="e.g. Explain Ferradays Laws for MDCAT..."></textarea>
+            <button onclick="refineStudentPrompt()" class="mt-5 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl shadow-lg transition-all active:scale-95">Generate Expert Prompt ✨</button>
+            <div id="studentResultArea" class="hidden mt-8 animate-fade-in">
+                <p class="text-[10px] text-gray-500 mb-2 uppercase font-black tracking-tighter">Copy to ChatGPT/Gemini:</p>
+                <div id="studentOutput" class="bg-black/60 p-5 rounded-xl text-green-400 text-sm font-mono border border-green-900/20 leading-relaxed shadow-inner"></div>
+                <button onclick="copyText('studentOutput')" class="mt-3 text-sm text-indigo-400 hover:text-indigo-300 flex items-center">Copy to Clipboard 📋</button>
+            </div>
+        </div>
+
+        <!-- Tool 2: Shorts Generator -->
+        <div id="content2" class="hidden bg-gray-800/40 p-6 rounded-2xl shadow-xl border border-gray-700 backdrop-blur-md">
+            <label class="block text-xs font-bold mb-3 text-indigo-300 uppercase tracking-widest">Video Topic:</label>
+            <textarea id="creatorInput" rows="4" class="w-full bg-gray-900/80 border border-gray-700 rounded-xl p-4 text-white focus:ring-2 focus:ring-indigo-500 outline-none placeholder-gray-600" placeholder="e.g. Why people fail MDCAT..."></textarea>
+            <button onclick="generateShortsData()" class="mt-5 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl shadow-lg transition-all active:scale-95">Make Viral Captions 🚀</button>
+            <div id="creatorResultArea" class="hidden mt-8 space-y-4 animate-fade-in">
+                <div class="bg-black/40 p-5 rounded-xl border border-indigo-900/20">
+                    <p class="text-[10px] text-indigo-400 font-bold mb-2 uppercase">Viral Titles:</p>
+                    <div id="creatorTitles" class="text-sm italic text-gray-100"></div>
+                </div>
+                <div class="bg-black/40 p-5 rounded-xl border border-indigo-900/20">
+                    <p class="text-[10px] text-indigo-400 font-bold mb-2 uppercase">Description & Tags:</p>
+                    <div id="creatorDesc" class="text-sm text-gray-300 leading-relaxed"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tool 3: LocaLink (Simplify Mode) -->
+        <div id="content3" class="hidden bg-gray-800/40 p-6 rounded-2xl shadow-xl border border-gray-700 backdrop-blur-md">
+            <div class="flex items-center space-x-2 mb-4">
+                <span class="bg-indigo-500/20 text-indigo-400 text-[10px] px-2 py-1 rounded font-bold uppercase">Beta</span>
+                <h2 class="text-lg font-bold">LocaLink: Linguistic Fidelity</h2>
+            </div>
+            <label class="block text-xs font-bold mb-3 text-indigo-300 uppercase tracking-widest">Complex English Concept:</label>
+            <textarea id="localinkInput" rows="4" class="w-full bg-gray-900/80 border border-gray-700 rounded-xl p-4 text-white focus:ring-2 focus:ring-indigo-500 outline-none placeholder-gray-600" placeholder="Paste a hard paragraph from your textbook..."></textarea>
+            <button onclick="runLocaLink()" class="mt-5 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl shadow-lg transition-all active:scale-95">Simplify in Local Style 🇵🇰</button>
+            <div id="localinkResultArea" class="hidden mt-8 animate-fade-in">
+                <p class="text-[10px] text-gray-500 mb-2 uppercase font-black tracking-tighter">Use this prompt for "LocaLink" Results:</p>
+                <div id="localinkOutput" class="bg-black/60 p-5 rounded-xl text-indigo-300 text-sm font-mono border border-indigo-900/20 leading-relaxed"></div>
+                <button onclick="copyText('localinkOutput')" class="mt-3 text-sm text-indigo-400 hover:text-indigo-300 flex items-center">Copy LocaLink Prompt 📋</button>
+            </div>
+        </div>
+
+        <footer class="mt-12 text-center text-gray-600 text-[10px] tracking-widest uppercase">
+            Designed by [Your Name] • SkillSparkAI-Tech • Pakistan 2026
+        </footer>
+    </div>
+
+    <script>
+        function switchTab(t) {
+            document.getElementById('content1').classList.toggle('hidden', t!==1);
+            document.getElementById('content2').classList.toggle('hidden', t!==2);
+            document.getElementById('content3').classList.toggle('hidden', t!==3);
+            
+            document.getElementById('tab1').className = t===1 ? 'pb-2 px-2 sm:px-4 tab-active font-semibold transition' : 'pb-2 px-2 sm:px-4 text-gray-400 font-semibold transition';
+            document.getElementById('tab2').className = t===2 ? 'pb-2 px-2 sm:px-4 tab-active font-semibold transition' : 'pb-2 px-2 sm:px-4 text-gray-400 font-semibold transition';
+            document.getElementById('tab3').className = t===3 ? 'pb-2 px-2 sm:px-4 tab-active font-semibold transition text-indigo-400' : 'pb-2 px-2 sm:px-4 text-gray-400 font-semibold transition';
+        }
+
+        const corrections = { "ferraday": "Faraday", "electromag": "Electromagnetism", "pak": "Pakistan", "mdcat": "MDCAT", "ecat": "ECAT", "fbise": "Federal Board" };
+
+        function refineStudentPrompt() {
+            let val = document.getElementById('studentInput').value;
+            if(!val) return;
+            let corrected = val.split(" ").map(w => corrections[w.toLowerCase().replace(/[^a-z]/g, "")] || w).join(" ");
+            let ctx = val.toLowerCase().includes("mdcat") ? "Focus on MDCAT patterns/UHS syllabus." : (val.toLowerCase().includes("fbise") ? "Align with FBISE standards." : "");
+            
+            const prompt = `Act as an expert Pakistani academic tutor. Explain: "${corrected}"\n` +
+                           `${ctx ? 'Context: '+ctx+'\n' : ''}\n1. Simple Concept Summary\n2. 3 Exam-Specific Points\n3. Desi Analogy\n4. 2 MCQ 'Trick' Practice Questions.`;
+            document.getElementById('studentOutput').innerText = prompt;
+            document.getElementById('studentResultArea').classList.remove('hidden');
+        }
+
+        function generateShortsData() {
+            let val = document.getElementById('creatorInput').value;
+            if(!val) return;
+            document.getElementById('creatorTitles').innerText = `1. The ${val} Secret You Didn't Know!\n2. Why ${val} is easier than you think 😱\n3. Top trick for ${val} exams!`;
+            document.getElementById('creatorDesc').innerText = `Master ${val} fast! \n\n#Shorts #Pakistan #Exams #StudyTips`;
+            document.getElementById('creatorResultArea').classList.remove('hidden');
+        }
+
+        function runLocaLink() {
+            let val = document.getElementById('localinkInput').value;
+            if(!val) return;
+            const prompt = `Act as a bilingual teacher in Pakistan (LocaLink Mode). \n\nCONCEPT: "${val}"\n\nExplain this concept using Linguistic Fidelity: \n1. Use a mix of English and Roman Urdu/Hindi for max clarity.\n2. Reference local examples found in Pakistani BISE/FBISE textbooks.\n3. Use a 'Desi' household analogy.\n4. Keep the tone friendly and helpful.`;
+            document.getElementById('localinkOutput').innerText = prompt;
+            document.getElementById('localinkResultArea').classList.remove('hidden');
+        }
+
+        function copyText(id) {
+            const el = document.getElementById(id);
+            const range = document.createRange();
+            range.selectNode(el);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand("copy");
+            window.getSelection().removeAllRanges();
+            alert("Prompt Copied! Paste into Gemini or ChatGPT.");
+        }
+    </script>
+</body>
+</html>
